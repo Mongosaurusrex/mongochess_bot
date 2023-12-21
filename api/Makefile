@@ -18,7 +18,7 @@ start-api:
 
 start-api-prod: install-depencecies-prod build-client
 	@echo "Starting API"
-	uvicorn main:app --port 8000;
+	uvicorn main:app --port 80;
 
 install-depencecies-prod:
 	@echo "Installing dependencies"
