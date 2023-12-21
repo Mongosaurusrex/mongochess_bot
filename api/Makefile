@@ -16,10 +16,14 @@ start-api:
 	uvicorn main:app --reload --port 8000;
 
 
-start-api-prod: install-depencecies-prod
+start-api-prod: install-depencecies-prod build-client
 	@echo "Starting API"
 	uvicorn main:app --port 8000;
 
 install-depencecies-prod:
 	@echo "Installing dependencies"
 	pip install -r requirements.txt;
+
+build-client:
+	@echo "Building client"
+	cd ../client && npm run build;

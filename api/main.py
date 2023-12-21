@@ -3,6 +3,7 @@ import sys
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -21,7 +22,7 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/health")
 def read_root():
     return "Healthy boi"
 
@@ -29,6 +30,9 @@ def read_root():
 @app.post("/move")
 def make_chess_move(chess_state: ChessState):
     return make_chess_move(chess_state)
+
+
+app.mount("/", StaticFiles(directory="../client/build", html=True), name="static")
 
 
 """
@@ -48,8 +52,6 @@ def minimaxRoot(depth, board, isMaximizing):
         )
         board.pop()
         if value > bestMove:
-            print("Best score: ", str(bestMove))
-            print("Best move: ", str(bestMoveFinal))
             bestMove = value
             bestMoveFinal = move
     return bestMoveFinal
