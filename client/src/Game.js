@@ -1,13 +1,28 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+import CircularProgress from "@mui/material/CircularProgress";
 import CustomDialog from "./components/CustomDialog";
+import axios from "axios";
 
 function Game({ orientation }) {
   const chess = useMemo(() => new Chess(), []);
   const [fen, setFen] = useState(chess.fen());
   const [over, setOver] = useState("");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      const botMove = await requestMoveFromBot();
 
+      chess.move(botMove);
+      setFen(chess.fen());
+      setLoading(false);
+    };
+    if (orientation === "b") {
+      fetchData();
+    }
+  }, []);
   function onDrop(sourceSquare, targetSquare) {
     const moveData = {
       from: sourceSquare,
@@ -23,18 +38,23 @@ function Game({ orientation }) {
     return true;
   }
 
-  const isDraggablePiece = ({ piece }) => piece.includes(orientation);
+  const requestMoveFromBot = async () => {
+    return (
+      await axios.post("http://localhost:8000/move", { fen: chess.fen() })
+    ).data;
+  };
 
   const makeAMove = useCallback(
-    (move) => {
+    async (move) => {
       try {
-        if (orientation !== move.color) {
-          return false;
-        }
-
         const result = chess.move(move);
         setFen(chess.fen());
+        setLoading(true);
+        const botMove = await requestMoveFromBot();
 
+        chess.move(botMove);
+        setFen(chess.fen());
+        setLoading(false);
         if (chess.isGameOver()) {
           if (chess.isCheckmate()) {
             setOver(
@@ -52,7 +72,7 @@ function Game({ orientation }) {
         return null;
       }
     },
-    [chess, orientation]
+    [chess, fen, requestMoveFromBot]
   );
 
   return (
@@ -61,7 +81,7 @@ function Game({ orientation }) {
         <Chessboard
           position={fen}
           onPieceDrop={onDrop}
-          isDraggablePiece={isDraggablePiece}
+          isDraggablePiece={({ piece }) => piece.includes(orientation)}
           boardOrientation={orientation === "w" ? "white" : "black"}
           customDarkSquareStyle={{ backgroundColor: "#779952" }}
           customLightSquareStyle={{ backgroundColor: "#edeed1" }}
@@ -71,6 +91,12 @@ function Game({ orientation }) {
           }}
           boardWidth={700}
         />
+        {loading ? (
+          <h2>
+            <CircularProgress />
+            Waiting for the bot to make a move...
+          </h2>
+        ) : null}
       </div>
       <CustomDialog
         open={Boolean(over)}
