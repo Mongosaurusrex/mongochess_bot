@@ -40,7 +40,7 @@ function Game({ orientation }) {
 
   const requestMoveFromBot = async () => {
     return (
-      await axios.post("http://127.0.0.1:8000/move", { fen: chess.fen() })
+      await axios.post("https://chess.dygant.com/move", { fen: chess.fen() })
     ).data;
   };
 
