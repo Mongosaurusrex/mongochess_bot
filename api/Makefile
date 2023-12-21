@@ -18,7 +18,7 @@ start-api:
 
 start-api-prod: install-depencecies-prod build-client
 	@echo "Starting API"
-	uvicorn main:app --port 80;
+	pm2 start "python -m uvicorn main:app --port 80" --name "chess-api";
 
 install-depencecies-prod:
 	@echo "Installing dependencies"
