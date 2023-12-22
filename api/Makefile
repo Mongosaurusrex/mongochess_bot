@@ -18,6 +18,7 @@ start-api:
 
 start-api-prod: install-depencecies-prod
 	@echo "Starting API"
+	pm2 delete all;
 	pm2 start "python -m uvicorn main:app --port 8000" --name "chess-api";
 
 install-depencecies-prod:
