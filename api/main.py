@@ -14,7 +14,7 @@ class ChessState(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["comforting-croissant-0cc459.netlify.app"],
+    allow_origins=["https://comforting-croissant-0cc459.netlify.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
