@@ -16,7 +16,7 @@ start-api:
 	uvicorn main:app --reload --port 8000;
 
 
-start-api-prod: install-depencecies-prod build-client
+start-api-prod: install-depencecies-prod
 	@echo "Starting API"
 	pm2 start "python -m uvicorn main:app --port 8000" --name "chess-api";
 

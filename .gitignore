@@ -159,4 +159,4 @@ cython_debug/
 #.idea/
 
 # Project specific
-api/model/data/*
+model/data/*
