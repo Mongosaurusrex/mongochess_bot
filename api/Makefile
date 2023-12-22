@@ -23,7 +23,3 @@ start-api-prod: install-depencecies-prod build-client
 install-depencecies-prod:
 	@echo "Installing dependencies"
 	pip install -r requirements.txt;
-
-build-client:
-	@echo "Building client"
-	cd ../client && npm run build;
