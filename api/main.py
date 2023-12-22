@@ -145,7 +145,7 @@ def getPieceValue(piece):
 def make_chess_move(chess_state: ChessState):
     print("Making move...")
     board = chess.Board(chess_state.fen)
-    move = [*str(minimaxRoot(3, board, True))]
+    move = [*str(minimaxRoot(4, board, True))]
     print(f"Best move calculated: {''.join(move)}")
     result = {
         "from": move[0] + move[1],
